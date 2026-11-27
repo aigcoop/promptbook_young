@@ -45,3 +45,13 @@
   bs=document.querySelectorAll('button[data-share]');
   for(i=0;i<bs.length;i++){bs[i].addEventListener('click',function(){share(this)})}
 })();
+
+(function(){
+  var bs=document.querySelectorAll('a[data-back]');
+  var home=new URL('../../',location.href).href;
+  var r=document.referrer||'';
+  var fromList=r.split('#')[0].split('?')[0].replace(/index\.html$/,'')===home;
+  for(var i=0;i<bs.length;i++){bs[i].addEventListener('click',function(e){
+    if(fromList&&history.length>1){e.preventDefault();history.back()}
+  })}
+})();

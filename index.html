@@ -11,7 +11,7 @@
 <meta property="og:image" content="https://aigcoop.github.io/promptbook_young/p/1-002/photo.jpg">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <main>
@@ -19,10 +19,10 @@
   <p class="edu">지쿱AI대학교 · 지쿱파트너스 교육용 프롬프트</p>
   <h1>사진만 올리면 되는, <em>제품 광고 프롬프트</em></h1>
   <p class="how">사진을 누르면 예시와 프롬프트가 나와요. 상황 200가지마다 이미지 프롬프트와 10초 영상 프롬프트가 있어요. 사진 오른쪽 아래의 <b>공유 단추</b>를 누르면 그 번호 하나만 보이는 링크가 공유돼요.</p>
-  <p class="jump"><a href="#book1">1권 캐릭터·동물 + 제품</a><a href="#book2">2권 사람 + 제품</a></p>
+  <p class="jump" id="filter"><a href="#all" data-f="all" class="on">전체 보기</a><a href="#book1" data-f="book1">1권 캐릭터·동물</a><a href="#book2" data-f="book2">2권 사람</a></p>
   <p id="msg" class="toast" role="status" aria-live="polite"></p>
   <h2 id="book1"><span class="step">1권 · 100개 · 제품 사진 한 장</span>캐릭터·동물 + 제품</h2>
-  <ul class="grid">
+  <ul class="grid" id="grid1">
     <li class="tile">
       <a class="open" href="p/1-001/" aria-label="1권 1번 수달 택배, 쟁반 밀고 둥둥"><img src="p/1-001/thumb.jpg" width="360" height="480" alt="" loading="lazy"></a>
       <span class="kind">동물 · 영상</span><span class="num">1</span>
@@ -525,7 +525,7 @@
     </li>
   </ul>
   <h2 id="book2"><span class="step">2권 · 100개 · 인물 사진 한 장과 제품 사진 한 장</span>사람 + 제품</h2>
-  <ul class="grid">
+  <ul class="grid" id="grid2">
     <li class="tile">
       <a class="open" href="p/2-001/" aria-label="2권 1번 제품 더미에 파묻힌 날"><img src="p/2-001/thumb.jpg" width="360" height="480" alt="" loading="lazy"></a>
       <span class="kind">코믹 · 영상</span><span class="num">1</span>
@@ -1062,6 +1062,27 @@
   }
   var bs=document.querySelectorAll('button[data-url]');
   for(var i=0;i<bs.length;i++){bs[i].addEventListener('click',function(){share(this)})}
+})();
+(function(){
+  var links=document.querySelectorAll('#filter a');
+  var parts={book1:[document.getElementById('book1'),document.getElementById('grid1')],
+             book2:[document.getElementById('book2'),document.getElementById('grid2')]};
+  function show(f){
+    if(f!=='book1'&&f!=='book2'){f='all'}
+    for(var k in parts){for(var j=0;j<2;j++){parts[k][j].hidden=!(f==='all'||f===k)}}
+    for(var i=0;i<links.length;i++){
+      var on=links[i].getAttribute('data-f')===f;
+      links[i].classList.toggle('on',on);
+      if(on){links[i].setAttribute('aria-current','true')}else{links[i].removeAttribute('aria-current')}
+    }
+  }
+  for(var i=0;i<links.length;i++){links[i].addEventListener('click',function(e){
+    e.preventDefault();var f=this.getAttribute('data-f');
+    try{history.replaceState(null,'','#'+f)}catch(err){}
+    show(f);window.scrollTo(0,0);
+  })}
+  show((location.hash||'').slice(1));
+  window.addEventListener('hashchange',function(){show((location.hash||'').slice(1))});
 })();
 </script>
 </body>
